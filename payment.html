@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment</title>
+  <style>
+/* Basic styling for payment.html similar to Instamojo's checkout */
+body {
+  font-family: "Nunito";
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.header {
+  background-color: #6c5ce7;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.payment-form {
+    display: flex;
+    justify-content: space-around   ;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  flex: 1;
+  order: 1;
+}
+
+.cart-details {
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid rgba(29, 29, 29, 0.578);
+  padding: 20px;
+  flex: 1;
+  order: 2;
+  margin-bottom: 20px; 
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+
+@media screen and (max-width: 767px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .cart-details {
+    order: 3; 
+  }
+  .payment-form{
+    flex-direction: column;
+  }
+}
+
+
+
+  </style>
+<link href="img/favicon.ico" rel="icon">
+
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Nunito:600,700" rel="stylesheet"> 
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+<link href="css/style.css" rel="stylesheet">
+<link href="menustyle.css" rel="stylesheet">    
+</head>
+<body>
+    <div class="navbar navbar-expand-lg bg-light navbar-light">
+        <div class="container-fluid">
+            <a href="main.html" class="navbar-brand">FOOD<span>4U</span></a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+                    <a href="main.html" class="nav-item nav-link active">Home</a>
+                    <a href="about.html" class="nav-item nav-link">About</a>
+                    <a href="team.html" class="nav-item nav-link">Tiffinwala</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Join us as</a>
+                        <div class="dropdown-menu">
+                            <a href="tiffinwala.html" class="dropdown-item">Join as tiffinwala</a>
+                            <a href="deliveryman.html" class="dropdown-item">Join as Deliveryman</a>
+                        </div>
+                    </div>
+                    <a href="contact.html" class="nav-item nav-link">Login</a>
+        <a href="registration.html" class="nav-item nav-link">sign up</a>
+        <a href="./cart.html" >
+            <i class="fa fa-shopping-cart" style="font-size:48px;color:#000"></i>
+        </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+   
+
+  <div class="container">
+    <div class="payment-form">
+        <div class="left">
+
+            <h1>Payment Details</h1>
+            
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+            </div>
+            <div class="righ">
+
+                <h2>Cart Details</h2>
+                <div id="cartDetails" class="cart-details"></div>
+                <p>Total Amount: $<span id="totalAmount" class=""></span></p>
+                
+                <button type="submit" class="btn">Make Payment</button>
+            </div>
+            </form>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+const cartItems = JSON.parse(urlParams.get('cartItems'));
+const totalAmount = parseFloat(urlParams.get('totalAmount'));
+
+const cartDetailsDiv = document.getElementById('cartDetails');
+const totalAmountSpan = document.getElementById('totalAmount');
+
+if (cartItems && cartItems.length > 0) {
+  cartItems.forEach(item => {
+    const itemDiv = document.createElement('div');
+    itemDiv.innerHTML = `<p>${item.name} - $${item.price}</p>`;
+    cartDetailsDiv.appendChild(itemDiv);
+  });
+} else {
+  cartDetailsDiv.innerHTML = "<p>No items in the cart</p>";
+}
+
+totalAmountSpan.textContent = totalAmount.toFixed(2);
+
+document.getElementById('paymentForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  alert('Payment processed successfully!');
+});
+  </script>
+</body>
+</html>
+
+

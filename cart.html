@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart</title>
+  <link href="img/favicon.ico" rel="icon">
+
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Nunito:600,700" rel="stylesheet"> 
+        
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+        <link href="css/style.css" rel="stylesheet">
+<link href="menustyle.css" rel="stylesheet">
+  <style>
+body {
+  font-family: 'Nunito';
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #f8f9fa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.cart-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.cart-items div {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.cart-items img {
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.cart-items p {
+  margin-bottom: 5px;
+}
+
+.btnRm{
+  font-family: "Nunito";
+    margin-top: 1px;
+    display: inline-block;
+    padding:.8rem 3rem;
+    font-size:16px;
+    color:orange;
+    border: 1px solid orange;
+    background:white;
+    border-radius: .5rem;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+}
+
+
+  </style>
+</head>
+<body>
+    <div class="navbar navbar-expand-lg bg-light navbar-light">
+        <div class="container-fluid">
+            <a href="main.html" class="navbar-brand">FOOD<span>4U</span></a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+                    <a href="main.html" class="nav-item nav-link active">Home</a>
+                    <a href="about.html" class="nav-item nav-link">About</a>
+                    <a href="team.html" class="nav-item nav-link">Tiffinwala</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Join us as</a>
+                        <div class="dropdown-menu">
+                            <a href="tiffinwala.html" class="dropdown-item">Join as tiffinwala</a>
+                            <a href="deliveryman.html" class="dropdown-item">Join as Deliveryman</a>
+                        </div>
+                    </div>
+                    <a href="contact.html" class="nav-item nav-link">Login</a>
+        <a href="registration.html" class="nav-item nav-link">sign up</a>
+        <a href="./cart.html" >
+            <i class="fa fa-shopping-cart" style="font-size:48px;color:#000"></i>
+        </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="heading">
+        <h1>krensii's kitchen</h1>
+        <h3>&mdash; MENU &mdash; </h3>
+    </div>
+  <div class="container">
+    <h1>Your Cart</h1>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-summary">
+        <p>Total Items: <span id="totalItems"></span></p>
+        <p>Total Price: $<span id="totalPrice"></span></p>
+      </div>
+      <div class="payment-button">
+        <a href="#" onclick="goToPayment()" class="btn">Proceed to Payment</a>
+      </div>
+  </div>
+
+  <script>
+    // Function to remove an item from the cart
+    function removeItem(index) {
+      let cartItems = JSON.parse(localStorage.getItem('cartItems'));
+      if (cartItems && cartItems.length > index) {
+        cartItems.splice(index, 1);
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        displayCartItems(); // Refresh the cart items after deletion
+      }
+    }
+
+    function proceedToPayment() {
+      window.location.href = 'payment.html'; // Redirect to payment.html
+    }
+    // Function to display cart items
+    function displayCartItems() {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+      const cartItemsDiv = document.getElementById('cartItems');
+      const totalItemsSpan = document.getElementById('totalItems');
+      const totalPriceSpan = document.getElementById('totalPrice');
+
+      cartItemsDiv.innerHTML = ''; 
+
+      let totalItems = 0;
+      let totalPrice = 0;
+
+      if (cartItems && cartItems.length > 0) {
+        cartItems.forEach((item, index) => {
+          const itemDiv = document.createElement('div');
+          itemDiv.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" height="100px">
+            <p>${item.name} - $${item.price}</p>
+            <button class=" btnRm" onclick="removeItem(${index})">Remove</button>
+          `;
+          cartItemsDiv.appendChild(itemDiv);
+
+          // Update total items and total price
+          totalItems++;
+          totalPrice += item.price;
+        });
+      } else {
+        cartItemsDiv.innerHTML = "<p>No items in the cart</p>";
+      }
+
+      // Display total items and total price
+      totalItemsSpan.textContent = totalItems;
+      totalPriceSpan.textContent = totalPrice.toFixed(2); // Display price with 2 decimal places
+    }
+
+
+    function goToPayment() {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+      let totalAmount = 0;
+
+      if (cartItems && cartItems.length > 0) {
+        cartItems.forEach(item => {
+          totalAmount += item.price;
+        });
+      }
+
+      const params = new URLSearchParams();
+      params.append('cartItems', JSON.stringify(cartItems));
+      params.append('totalAmount', totalAmount);
+
+      const url = `payment.html?${params.toString()}`;
+      window.location.href = url;
+    }
+
+    // Display cart items on page load
+    window.onload = function() {
+      displayCartItems();
+    };
+  </script>     
+</body>
+</html>
